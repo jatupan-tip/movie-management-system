@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rating {
+  G
+  PG
+  M
+  MA
+  R
+}
+
+model Movie {
+  id        Int      @id @default(autoincrement())
+  title     String
+  year      Int
+  rating    Rating
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  MANAGER
+  TEAMLEADER
+  FLOORSTAFF
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+}
