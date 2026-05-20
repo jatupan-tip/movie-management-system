@@ -8,11 +8,8 @@ export default function Login() {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
-
     const [password, setPassword] = useState("");
-
     const [showPassword, setShowPassword] = useState(false);
-
     const [rememberMe, setRememberMe] = useState(false);
 
     useEffect(() => {
@@ -53,8 +50,8 @@ export default function Login() {
     return (
         <div className="login-page">
             <div className="login-background"></div>
-            <div className="login-logo">
-                <div className="logo"></div>
+            <div className="login-logo-box">
+                <div className="login-logo"></div>
                 <h1>MovieList</h1>
             </div>
 
@@ -63,7 +60,7 @@ export default function Login() {
 
                 <form onSubmit={handleLogin}>
                     <div className="input-group">
-                        <div className="input-box">
+                        <div className="login-input-box">
                             <input
                                 type="email"
                                 placeholder="Email"
@@ -72,7 +69,7 @@ export default function Login() {
                             />
                         </div>
 
-                        <div className="input-box password-container">
+                        <div className="login-input-box password-container">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
@@ -103,13 +100,13 @@ export default function Login() {
                         <span>Remember me</span>
                     </div>
 
-                    <div className="button-box">
+                    <div className="importent-button-box">
                         <button type="submit">Sign in</button>
                     </div>
 
                     <p>Don't have an account?</p>
 
-                    <div className="button-box">
+                    <div className="login-button-box">
                         <button type="button" onClick={() => navigate("/register")}>
                             Sign up
                         </button>
