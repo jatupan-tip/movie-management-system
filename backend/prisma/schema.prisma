@@ -16,11 +16,19 @@ enum Rating {
 }
 
 model Movie {
-  id        Int      @id @default(autoincrement())
-  title     String
-  year      Int
-  rating    Rating
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+
+  title         String
+  yearReleased  Int
+  rating        Rating
+
+  imageUrl      String?
+
+  createdAt     DateTime @default(now())
+  createdBy     String?
+
+  updatedAt     DateTime? @updatedAt
+  updatedBy     String?
 }
 
 enum Role {
@@ -29,10 +37,21 @@ enum Role {
   FLOORSTAFF
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      Role
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+
+  username   String?   @unique
+  email      String   @unique
+  password   String
+
+  status     UserStatus @default(ACTIVE)
+
+  role       Role
+
+  createdAt  DateTime @default(now())
 }

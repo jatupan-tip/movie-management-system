@@ -21,6 +21,7 @@ export class AuthService {
         const hashedPassword = await bcrypt.hash(body.password, 10);
 
         const newUser = await this.usersService.createUser({
+            username: body.username,
             email: body.email,
             password: hashedPassword,
             role: 'FLOORSTAFF',
@@ -39,6 +40,10 @@ export class AuthService {
             throw new UnauthorizedException('Invalid email or password');
         }
 
+        if (user.status === 'INACTIVE') {
+            throw new UnauthorizedException('User is inactive');
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
@@ -47,6 +52,7 @@ export class AuthService {
 
         const payload = {
             userId: user.id,
+            username: user.username,
             role: user.role,
         };
 

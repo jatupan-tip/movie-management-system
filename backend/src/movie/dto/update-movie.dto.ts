@@ -6,29 +6,34 @@ import {
     IsInt,
     IsString,
     IsOptional,
+    Min,
+    Max,
 } from 'class-validator';
 
 export class UpdateMovieDto {
     @ApiProperty({
         example: 'Avengers',
     })
-    @IsOptional()
     @IsString()
     title!: string;
 
     @ApiProperty({
         example: 2020,
     })
-    @IsOptional()
     @Type(() => Number)
     @IsInt()
-    year!: number;
+    @Min(1900)
+    @Max(2100)
+    yearReleased!: number;
 
     @ApiProperty({
         enum: Rating,
-        example: 'PG13',
+        example: 'PG',
     })
-    @IsOptional()
     @IsEnum(Rating)
     rating!: Rating;
+
+    @IsOptional()
+    @IsString()
+    removeImage?: string;
 }

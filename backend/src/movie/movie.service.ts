@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import * as fs from 'fs';
 
 @Injectable()
 export class MovieService {
@@ -25,29 +26,76 @@ export class MovieService {
             throw new NotFoundException('Movie not found');
         }
 
-        return {
-            message: 'Movies found successfully',
-            data: moviesById
-        }
+        return moviesById;
     }
 
-    async createMovie(body: CreateMovieDto) {
+    async createMovie(
+        body: CreateMovieDto,
+        username: string,
+        filename?: string,
+    ) {
         const createMovie = await this.prisma.movie.create({
-            data: body
+            data: {
+                ...body,
+                createdBy: username,
+                imageUrl: filename
+                    ? `/uploads/${filename}`
+                    : null,
+            }
         });
-        
+
         return {
             message: 'Movie created successfully',
             data: createMovie
         };
     }
 
-    async updateMovie(id: number, body: UpdateMovieDto) {
-        await this.getMoviesById(id);
+    async updateMovie(
+        id: number,
+        body: UpdateMovieDto,
+        username: string,
+        filename?: string,
+    ) {
+        const movie = await this.getMoviesById(id);
+
+        const { removeImage, ...movieData } = body;
+
+        // ลบรูปเก่าเมื่ออัปโหลดใหม่
+        if (filename && movie.imageUrl) {
+            const oldFile = `.${movie.imageUrl}`;
+
+            if (fs.existsSync(oldFile)) {
+                fs.unlinkSync(oldFile);
+            }
+        }
+
+        // ลบรูปเมื่อกด remove
+        if (
+            removeImage === 'true' &&
+            movie.imageUrl
+        ) {
+            const filePath = `.${movie.imageUrl}`;
+
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
 
         const updateMovie = await this.prisma.movie.update({
-            where: { id: id },
-            data: body,
+            where: { id },
+
+            data: {
+                ...movieData,
+
+                updatedBy: username,
+
+                imageUrl:
+                    removeImage === 'true'
+                        ? null
+                        : filename
+                            ? `/uploads/${filename}`
+                            : movie.imageUrl,
+            },
         });
 
         return {
@@ -57,7 +105,18 @@ export class MovieService {
     }
 
     async deleteMovie(id: number) {
-        await this.getMoviesById(id);
+        const movie = await this.getMoviesById(id);
+
+        if (movie.imageUrl) {
+            const filePath =
+                `.${movie.imageUrl}`;
+
+            if (
+                fs.existsSync(filePath)
+            ) {
+                fs.unlinkSync(filePath);
+            }
+        }
 
         const deleteMovie = await this.prisma.movie.delete({
             where: { id: id }

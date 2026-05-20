@@ -5,6 +5,8 @@ import {
   IsEnum,
   IsInt,
   IsString,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class CreateMovieDto {
@@ -19,7 +21,9 @@ export class CreateMovieDto {
   })
   @Type(() => Number)
   @IsInt()
-  year!: number;
+  @Min(1900)
+  @Max(2100)
+  yearReleased!: number;
 
   @ApiProperty({
     enum: Rating,

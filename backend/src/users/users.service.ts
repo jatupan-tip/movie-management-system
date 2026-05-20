@@ -13,6 +13,7 @@ export class UsersService {
     }
 
     async createUser(body: {
+        username: string,
         email: string,
         password: string,
         role: Role,
@@ -21,8 +22,10 @@ export class UsersService {
             data: body,
             select: {
                 id: true,
+                username: true,
                 email: true,
                 role: true,
+                status: true,
                 createdAt: true,
             },
         });
