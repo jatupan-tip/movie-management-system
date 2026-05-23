@@ -60,7 +60,6 @@ export class MovieService {
 
         const { removeImage, ...movieData } = body;
 
-        // ลบรูปเก่าเมื่ออัปโหลดใหม่
         if (filename && movie.imageUrl) {
             const oldFile = `.${movie.imageUrl}`;
 
@@ -68,8 +67,7 @@ export class MovieService {
                 fs.unlinkSync(oldFile);
             }
         }
-
-        // ลบรูปเมื่อกด remove
+        
         if (
             removeImage === 'true' &&
             movie.imageUrl

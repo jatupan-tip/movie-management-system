@@ -27,7 +27,6 @@ export class CreateMovieDto {
 
   @ApiProperty({
     enum: Rating,
-    example: 'PG13',
   })
   @IsEnum(Rating)
   rating!: Rating;

@@ -28,7 +28,6 @@ export class UpdateMovieDto {
 
     @ApiProperty({
         enum: Rating,
-        example: 'PG',
     })
     @IsEnum(Rating)
     rating!: Rating;

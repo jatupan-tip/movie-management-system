@@ -48,7 +48,7 @@ export default function Register() {
 
   return (
     <div className="register-page">
-      <div className="register-background"></div>
+      {/* <div className="register-background"></div> */}
       <div className="register-logo-box">
         <div className="register-logo"></div>
         <h1>MovieList</h1>
@@ -92,26 +92,26 @@ export default function Register() {
                 <img src={showPassword ? view : hidden} alt="toggle password" />
               </button>
             </div>
+          </div>
 
-            <div className="register-input-box password-container">
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+          <div className="register-input-box password-container">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+
+            <button
+              type="button"
+              className="eye-button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              <img
+                src={showConfirmPassword ? view : hidden}
+                alt="toggle password"
               />
-
-              <button
-                type="button"
-                className="eye-button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                <img
-                  src={showConfirmPassword ? view : hidden}
-                  alt="toggle password"
-                />
-              </button>
-            </div>
+            </button>
           </div>
 
           <div className="importent-button-box">

@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { join } from 'path';
       serveRoot: '/uploads',
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, UsersController],
   providers: [AppService],
 })
 export class AppModule { }
