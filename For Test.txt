@@ -1,0 +1,51 @@
+Frontend - React
+
+Backend - NestJS
+
+Database - PostgreSQL
+
+===================================================
+1) Add Database (schema.prisma)
+
+npx prisma migrate dev --name add_movie_image
+npx prisma generate
+
+===================================================
+2) Add Seed (seed.ts)
+
+npm install -D ts-node typescript
+npx prisma db seed
+
+accout for test = {
+
+	- Role: MANAGER
+	email: manager@test.com
+	password: 123456
+
+	- Role: TEAMLEADER
+	email: leader@test.com
+	password: 123456
+
+	- Role: FLOORSTAFF
+	email: staff@test.com
+	password: 123456
+
+}
+
+===================================================
+3) Run Backend and Frontend
+
+-Backend
+
+cd backend
+npm run start:dev
+
+- Frontend
+
+cd frontend
+npm run dev
+
+===================================================
+Other: Can you check my API at swagger UI
+
+http://localhost:3000/api
