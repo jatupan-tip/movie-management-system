@@ -15,7 +15,7 @@ type Props = {
 
 export default function MovieCard({ movie, role, onEdit, onDelete }: Props) {
   return (
-    <div className="card">
+    <div className={role === "FLOORSTAFF" ? "show-card" : "card"}>
       <div className="card-top">
         {movie.imageUrl ? (
           <img

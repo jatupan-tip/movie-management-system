@@ -872,7 +872,20 @@ select.edit-input {
 
 .card {
     width: 250px;
-    max-height: 450px;
+    min-height: 450px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.show-card {
+    width: 250px;
     min-height: 400px;
     background: white;
     display: flex;

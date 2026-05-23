@@ -14,21 +14,16 @@ type Props = {};
 
 export default function UserManagement({}: Props) {
   const [users, setUsers] = useState<User[]>([]);
-
   const [search, setSearch] = useState("");
-
   const [roleFilter, setRoleFilter] = useState("ALL");
-
   const [statusFilter, setStatusFilter] = useState("ALL");
-
+  const [dateSort, setDateSort] = useState<"newest" | "oldest">("oldest");
   const [currentPage, setCurrentPage] = useState(1);
-
   const usersPerPage = 10;
 
   async function fetchUsers() {
     try {
       const token = localStorage.getItem("token");
-
       const response = await api.get("/users", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -38,7 +33,6 @@ export default function UserManagement({}: Props) {
       setUsers(response.data.data);
     } catch (error) {
       console.log(error);
-
       alert("Load users failed");
     }
   }
@@ -71,16 +65,13 @@ export default function UserManagement({}: Props) {
       fetchUsers();
     } catch (error) {
       console.log(error);
-
       alert("Update role failed");
-
       fetchUsers();
     }
   }
 
   async function updateStatus(user: User) {
     const nextStatus = user.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
-
     const confirmed = window.confirm(`${nextStatus} "${user.username}" ?`);
 
     if (!confirmed) {
@@ -105,25 +96,36 @@ export default function UserManagement({}: Props) {
       fetchUsers();
     } catch (error) {
       console.log(error);
-
       alert("Update status failed");
     }
   }
 
   const filteredUsers = useMemo(() => {
-    return users.filter((user) => {
-      const matchSearch =
-        user.username?.toLowerCase().includes(search.toLowerCase()) ||
-        user.email.toLowerCase().includes(search.toLowerCase());
+    return users
+      .filter((user) => {
+        const matchSearch =
+          user.username?.toLowerCase().includes(search.toLowerCase()) ||
+          user.email.toLowerCase().includes(search.toLowerCase());
 
-      const matchRole = roleFilter === "ALL" || user.role === roleFilter;
+        const matchRole = roleFilter === "ALL" || user.role === roleFilter;
 
-      const matchStatus =
-        statusFilter === "ALL" || user.status === statusFilter;
+        const matchStatus =
+          statusFilter === "ALL" || user.status === statusFilter;
 
-      return matchSearch && matchRole && matchStatus;
-    });
-  }, [users, search, roleFilter, statusFilter]);
+        return matchSearch && matchRole && matchStatus;
+      })
+      .sort((a, b) => {
+        if (dateSort === "newest") {
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        }
+
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      });
+  }, [users, search, roleFilter, statusFilter, dateSort]);
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
@@ -160,11 +162,8 @@ export default function UserManagement({}: Props) {
             }}
           >
             <option value="ALL">All Roles</option>
-
             <option value="MANAGER">MANAGER</option>
-
             <option value="TEAMLEADER">TEAMLEADER</option>
-
             <option value="FLOORSTAFF">FLOORSTAFF</option>
           </select>
 
@@ -176,9 +175,7 @@ export default function UserManagement({}: Props) {
             }}
           >
             <option value="ALL">All Status</option>
-
             <option value="ACTIVE">ACTIVE</option>
-
             <option value="INACTIVE">INACTIVE</option>
           </select>
         </div>
@@ -189,15 +186,19 @@ export default function UserManagement({}: Props) {
           <thead>
             <tr>
               <th>Username</th>
-
               <th>Email</th>
-
               <th>Role</th>
-
               <th>Status</th>
-
-              <th>Created At</th>
-
+              <th
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  setDateSort((prev) =>
+                    prev === "oldest" ? "newest" : "oldest",
+                  )
+                }
+              >
+                Created At {dateSort === "newest" ? "↓" : "↑"}
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -205,11 +206,8 @@ export default function UserManagement({}: Props) {
           <tbody>
             {currentUsers.map((user) => (
               <tr key={user.id}>
-
                 <td>{user.username}</td>
-
                 <td>{user.email}</td>
-
                 <td>
                   <select
                     value={user.role}
@@ -217,13 +215,10 @@ export default function UserManagement({}: Props) {
                     className="role-select"
                   >
                     <option value="MANAGER">MANAGER</option>
-
                     <option value="TEAMLEADER">TEAMLEADER</option>
-
                     <option value="FLOORSTAFF">FLOORSTAFF</option>
                   </select>
                 </td>
-
                 <td>
                   <span
                     className={`status-badge ${
@@ -235,7 +230,6 @@ export default function UserManagement({}: Props) {
                     {user.status}
                   </span>
                 </td>
-
                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                 <td>
                   {![
